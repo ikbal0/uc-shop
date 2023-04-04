@@ -13,7 +13,8 @@ type User struct {
 	LastName  string    `json:"last_name" form:"last_name"`
 	Email     string    `gorm:"not null;uniqueIndex" json:"email" form:"email" valid:"required~email is required, email~email-Invalid email format"`
 	Password  string    `gorm:"not null" json:"password" form:"password" valid:"required~Password password is required, minstringlength(6)~Password has to have a minimum length of 6 characters"`
-	Products  []Product `gorm:"constraint:OnUpdate:CASCADE,OnDelete: SET NULL;" json:"products"`
+	Products  []Product `gorm:"constraint:OnUpdate:CASCADE,OnDelete: SET NULL;"`
+	Roles     []Role    `gorm:"constraint:OnUpdate:CASCADE,OnDelete: SET NULL; many2many:user_roles"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
