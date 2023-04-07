@@ -8,6 +8,7 @@ import (
 	"uc-shop/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var (
@@ -28,7 +29,21 @@ func GetUser(c *gin.Context) {
 	// 	Joins("JOIN products ON products.user_id = users.id").
 	// 	Find(&user).Error
 
-	err := db.Preload("Roles").Preload("Products").Find(&user).Error
+	// err := db.Preload("Roles", func(ctx *gorm.DB) *gorm.DB {
+	// 	return ctx.Omit("name", "description")
+	// }).Preload("Products").Find(&user).Error
+
+	err := db.Preload("Roles", func(ctx *gorm.DB) *gorm.DB {
+		return ctx.Select("id")
+	}).Preload("Products").Find(&user).Error
+
+	// type APIRole struct {
+	// 	ID uint
+	// }
+
+	// err := db.Preload("Roles", func(ctx *gorm.DB) *gorm.DB {
+	// 	return ctx.Find(&APIRole{})
+	// }).Preload("Products").Find(&user).Error
 
 	if err != nil {
 		fmt.Println("Error getting user data:", err.Error())
@@ -53,8 +68,21 @@ func UserLogin(c *gin.Context) {
 	}
 
 	password = User.Password
+	err := db.Debug().Where("email = ?", User.Email).Take(&User).Error
 
-	err := db.Debug().Where("email = ?", User.Email).Preload("Roles").Take(&User).Error
+	// err := db.Debug().Where("email = ?", User.Email).Preload("Roles", func(ctx *gorm.DB) *gorm.DB {
+	// 	return ctx.Select([]string{"role_id"})
+	// }).Take(&User).Error
+
+	// err := db.Debug().Where("email = ?", User.Email).Preload("Roles").Take(&User).Error
+
+	// type APIRole struct {
+	// 	ID uint
+	// }
+
+	// err := db.Debug().Where("email = ?", User.Email).Preload("Roles", func(ctx *gorm.DB) *gorm.DB {
+	// 	return ctx.Find(&APIRole{})
+	// }).Take(&User).Error
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -74,7 +102,7 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 
-	token := helpers.TokenGenerator(User.ID, User.Email, User.Roles)
+	token := helpers.TokenGenerator(User.ID, User.Email)
 
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,

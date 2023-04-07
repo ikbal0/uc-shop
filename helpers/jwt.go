@@ -41,11 +41,10 @@ func VerifyToken(c *gin.Context) (interface{}, error) {
 
 }
 
-func TokenGenerator(id uint, email string, roles interface{}) string {
+func TokenGenerator(id uint, email string) string {
 	claims := jwt.MapClaims{
 		"email": email,
 		"id":    id,
-		"roles": roles,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

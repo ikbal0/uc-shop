@@ -28,6 +28,8 @@ func StartApp() *gin.Engine {
 	{
 		productRouter.Use(middleware.Authentication())
 		roleRouter.POST("/", controllers.AddRole)
+
+		roleRouter.POST("/set", controllers.SetRole)
 	}
 
 	return r
