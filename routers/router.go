@@ -26,9 +26,8 @@ func StartApp() *gin.Engine {
 
 	roleRouter := r.Group("/role")
 	{
-		productRouter.Use(middleware.Authentication())
-		roleRouter.POST("/", controllers.AddRole)
-
+		roleRouter.Use(middleware.Authentication())
+		roleRouter.POST("/", middleware.IsRoleAdmin(), controllers.AddRole)
 		roleRouter.POST("/set", controllers.SetRole)
 	}
 
