@@ -1,14 +1,17 @@
 package main
 
 import (
+	"os"
 	"uc-shop/database"
 	"uc-shop/routers"
 )
 
 func main() {
 	database.StartDB()
+
+	var PROT = os.Getenv("PORT")
 	r := routers.StartApp()
-	r.Run(":8080")
+	r.Run(":" + PROT)
 	// mux := http.NewServeMux()
 
 	// endpoint := http.HandlerFunc(greet)
