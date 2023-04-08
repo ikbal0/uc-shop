@@ -28,7 +28,7 @@ func StartApp() *gin.Engine {
 	{
 		roleRouter.Use(middleware.Authentication())
 		roleRouter.POST("/", middleware.IsRoleAdmin(), controllers.AddRole)
-		roleRouter.POST("/set", middleware.IsRoleAdmin(), controllers.SetRole)
+		roleRouter.POST("/set", controllers.SetRole)
 	}
 
 	return r
