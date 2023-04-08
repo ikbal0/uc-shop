@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"uc-shop/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -37,7 +38,7 @@ func StartDB() {
 		log.Fatal("error connecting to database:", err)
 	}
 
-	// db.Debug().AutoMigrate(models.User{}, models.Product{}, models.Role{}, models.UserRole{})
+	db.Debug().AutoMigrate(models.User{}, models.Product{}, models.Role{}, models.UserRole{})
 }
 
 func GetDB() *gorm.DB {
